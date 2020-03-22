@@ -61,12 +61,12 @@ public class RemoteScriptCompiler implements ScriptCompiler {
     }
 
     /**
-     * A private method to set return mime type and extension based on the libraries
+     * A method to set return mime type and extension based on the libraries
      * being complied (JS/CSS).
      * 
      * @param resourceName
      */
-    private void setReturnContext(final String resourceName) {
+    void setReturnContext(final String resourceName) {
         if(resourceName.endsWith(".css." + COMPILER_EXTENSION)){
             MIME_TYPE = "text/css";
             OUTPUT_EXTENSION = "css";
