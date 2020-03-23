@@ -1,0 +1,5 @@
+#base=js
+jquery.min.js.href
+popper.min.js.href
+bootstrap.min.js.href
+local.js
