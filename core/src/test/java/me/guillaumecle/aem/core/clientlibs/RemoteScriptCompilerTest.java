@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.io.StringReader;
 import java.io.StringWriter;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -59,6 +60,23 @@ class RemoteScriptCompilerTest {
             () -> assertNotNull(out),
             () -> assertTrue(out.toString().contains("Input: hello.js"), "Test contents of error writer"),
             () -> assertTrue(out.toString().contains("Error: Failed to fetch library"), "Test contents of error writer")
+        );
+    }
+
+    @Test
+    void testParseResource() throws IOException {
+
+        String n = System.lineSeparator();
+
+        String contents = "" + n
+            + "line1" + n
+            + "line2" + n
+            + "line3" + n
+            + "";
+
+        String[] resources = fixture.parseResource(new StringReader(contents));
+        assertAll(
+            () -> assertEquals(resources.length, 3, "Test resources length")
         );
     }
 }

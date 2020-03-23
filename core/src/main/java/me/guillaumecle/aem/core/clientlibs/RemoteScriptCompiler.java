@@ -1,14 +1,20 @@
 package me.guillaumecle.aem.core.clientlibs;
 
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+
 import com.adobe.granite.ui.clientlibs.script.CompilerContext;
 import com.adobe.granite.ui.clientlibs.script.ScriptCompiler;
 import com.adobe.granite.ui.clientlibs.script.ScriptResource;
 
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -26,6 +32,8 @@ public class RemoteScriptCompiler implements ScriptCompiler {
     private String MIME_TYPE = "";
     private String OUTPUT_EXTENSION = "";
 
+    private final String rn = "\\r?\\n";
+
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Override
@@ -35,10 +43,12 @@ public class RemoteScriptCompiler implements ScriptCompiler {
         if (scriptResources != null && !scriptResources.isEmpty()) {
             scriptResources.stream().peek(first -> setReturnContext(first.getName())).forEach(resource -> {
                 try {
-                    out.write("/* Start: RemoteScriptCompiler Library */");
-                    out.write("ScriptResource Name: " + resource.getName());
-                    out.write("Compiler Context: " + ctx.getDestinationPath());
-                    out.write("/* End: RemoteScriptCompiler Library */");
+                    String[] resourceUrls = parseResource(resource.getReader());
+
+                    for (String resourceUrl : resourceUrls) {
+                        out.write("/*RemoteScriptCompiler - Source URL: " + resourceUrl + "*/" + System.lineSeparator());
+                        out.write(getRemoteLibrary(resourceUrl));
+                    }
                 } catch (final IOException e) {
                     writeError(out, resource.getName(), "Failed to compile library" + e.getMessage());
                 }
@@ -85,6 +95,14 @@ public class RemoteScriptCompiler implements ScriptCompiler {
         }
     }
 
+    /**
+     * A method to return the result of an HTTP GET request to the URL
+     * of the library as a string
+     * 
+     * @param libUrl
+     * @return libString
+     * @throws IOException
+     */
     String getRemoteLibrary(final String libUrl) throws IOException {
         final HttpGet request = new HttpGet(libUrl);
 
@@ -109,6 +127,14 @@ public class RemoteScriptCompiler implements ScriptCompiler {
         }
     }
 
+    /**
+     * Write error messages to the output writer and to the server
+     * logs.
+     * 
+     * @param out
+     * @param name
+     * @param message
+     */
     void writeError(final Writer out, final String name, final String message) {
 
         final String n = System.lineSeparator();
@@ -126,4 +152,21 @@ public class RemoteScriptCompiler implements ScriptCompiler {
         }
     }
 
+    /**
+     * Parse file contents and get URLs from each line 
+     * while cleaning out empty lines.
+     * 
+     * @param reader
+     * @return resourceUrls
+     * @throws IOException
+     */
+    String[] parseResource(Reader reader) throws IOException {
+        String contents = IOUtils.toString(reader);
+
+        //Convert and clean empties
+        List<String> contentList = new ArrayList<String>(Arrays.asList(contents.split(rn)));
+        contentList.removeAll(Arrays.asList("", null));
+
+        return contentList.toArray(new String[contentList.size()]);
+    }
 }
