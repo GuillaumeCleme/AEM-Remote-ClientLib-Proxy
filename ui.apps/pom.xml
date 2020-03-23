@@ -49,7 +49,7 @@
                 <artifactId>filevault-package-maven-plugin</artifactId>
                 <extensions>true</extensions>
                 <configuration>
-                    <group>me.guillaumecle.aem</group>
+                    <group>${componentGroupName}</group>
                     <name>aem-remote-clientlib-proxy.ui.apps</name>
                     <packageType>application</packageType>
                     <accessControlHandling>merge</accessControlHandling>
