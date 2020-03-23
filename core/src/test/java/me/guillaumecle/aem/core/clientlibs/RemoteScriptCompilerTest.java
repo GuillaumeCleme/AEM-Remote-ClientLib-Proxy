@@ -66,17 +66,18 @@ class RemoteScriptCompilerTest {
     @Test
     void testParseResource() throws IOException {
 
-        String n = System.lineSeparator();
+        String rn = System.lineSeparator();
 
-        String contents = "" + n
-            + "line1" + n
-            + "line2" + n
-            + "line3" + n
+        String contents = "" + rn
+            + "line1" + rn
+            + "line2" + rn
+            + "#Comment" + rn
+            + "line3" + rn
             + "";
 
         String[] resources = fixture.parseResource(new StringReader(contents));
         assertAll(
-            () -> assertEquals(resources.length, 3, "Test resources length")
+            () -> assertEquals(3, resources.length, "Test resources length")
         );
     }
 }

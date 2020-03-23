@@ -3,10 +3,8 @@ package me.guillaumecle.aem.core.clientlibs;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
 import com.adobe.granite.ui.clientlibs.script.CompilerContext;
 import com.adobe.granite.ui.clientlibs.script.ScriptCompiler;
@@ -32,7 +30,8 @@ public class RemoteScriptCompiler implements ScriptCompiler {
     private String MIME_TYPE = "";
     private String OUTPUT_EXTENSION = "";
 
-    private final String rn = "\\r?\\n";
+    private final String rn_regex = "\\r?\\n";
+    private final String rn = "\r\n";
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -41,17 +40,19 @@ public class RemoteScriptCompiler implements ScriptCompiler {
             throws IOException {
 
         if (scriptResources != null && !scriptResources.isEmpty()) {
-            scriptResources.stream().peek(first -> setReturnContext(first.getName())).forEach(resource -> {
-                try {
-                    String[] resourceUrls = parseResource(resource.getReader());
+            scriptResources.stream()
+                .peek(first -> setReturnContext(first.getName()))
+                .forEach(resource -> {
+                    try {
+                        String[] resourceUrls = parseResource(resource.getReader());
 
-                    for (String resourceUrl : resourceUrls) {
-                        out.write("/*RemoteScriptCompiler - Source URL: " + resourceUrl + "*/" + System.lineSeparator());
-                        out.write(getRemoteLibrary(resourceUrl));
+                        for (String resourceUrl : resourceUrls) {
+                            out.write(rn + "/*RemoteScriptCompiler - Source URL: " + resourceUrl + "*/" + rn);
+                            out.write(getRemoteLibrary(resourceUrl));
+                        }
+                    } catch (final IOException e) {
+                        writeError(out, resource.getName(), "Failed to compile library" + e.getMessage());
                     }
-                } catch (final IOException e) {
-                    writeError(out, resource.getName(), "Failed to compile library" + e.getMessage());
-                }
             });
         }
     }
@@ -136,17 +137,14 @@ public class RemoteScriptCompiler implements ScriptCompiler {
      * @param message
      */
     void writeError(final Writer out, final String name, final String message) {
-
-        final String n = System.lineSeparator();
-
         log.error("Failed to fetch or compile remote library {}: {}", name, message);
 
         try {
-            out.write("/*****************************************************" + n);
-            out.write("Fetching or compilation resulted in an error" + n);
-            out.write("Input: " + name + n);
-            out.write("Error: " + message + n);
-            out.write("*****************************************************/" + n);
+            out.write("/*****************************************************" + rn);
+            out.write("Fetching or compilation resulted in an error" + rn);
+            out.write("Input: " + name + rn);
+            out.write("Error: " + message + rn);
+            out.write("*****************************************************/" + rn);
         } catch (final IOException e) {
             log.error("Failed to append error message to writer", e);
         }
@@ -154,7 +152,7 @@ public class RemoteScriptCompiler implements ScriptCompiler {
 
     /**
      * Parse file contents and get URLs from each line 
-     * while cleaning out empty lines.
+     * while cleaning out empty lines and comments.
      * 
      * @param reader
      * @return resourceUrls
@@ -163,10 +161,10 @@ public class RemoteScriptCompiler implements ScriptCompiler {
     String[] parseResource(Reader reader) throws IOException {
         String contents = IOUtils.toString(reader);
 
-        //Convert and clean empties
-        List<String> contentList = new ArrayList<String>(Arrays.asList(contents.split(rn)));
-        contentList.removeAll(Arrays.asList("", null));
-
-        return contentList.toArray(new String[contentList.size()]);
+        //Convert and remove (empty lines and comments)
+        return Arrays.asList(contents.split(rn_regex))
+            .stream()
+            .filter(item -> !item.equals("") && !item.startsWith("#"))
+            .toArray(String[]::new);
     }
 }
