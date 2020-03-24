@@ -56,6 +56,13 @@
                     <properties>
                         <cloudManagerTarget>none</cloudManagerTarget>
                     </properties>
+                    <embeddeds>
+                        <embedded>
+                            <groupId>me.guillaumecle.aem</groupId>
+                            <artifactId>aem-remote-clientlib-proxy.core</artifactId>
+                            <target>/apps/guillaumecleme/install</target>
+                        </embedded>
+                    </embeddeds>
                 </configuration>
             </plugin>
             <plugin>
