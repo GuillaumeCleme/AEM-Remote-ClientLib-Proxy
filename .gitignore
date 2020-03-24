@@ -17,6 +17,9 @@ local.properties
 # Eclipse Core
 .project
 
+# VS Code
+.vscode/
+
 # External tool builders
 .externalToolBuilders/
 
