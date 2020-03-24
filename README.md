@@ -2,72 +2,111 @@
 
 ![Build Status](https://github.com/GuillaumeCleme/AEM-Remote-ClientLib-Proxy/workflows/Maven%20CI/badge.svg)
 
-An Adobe Experience Manager (AEM) remote client library proxy service to manage remote non-AEM client libraries server-side.
+An Adobe Experience Manager (AEM) remote [client library](https://docs.adobe.com/content/help/en/experience-manager-65/developing/introduction/clientlibs.html) proxy service to manage remote non-AEM client libraries server-side.
+
+This OSGI bundle contains a custom remote script compiler service which, when deployed, will bind itself to the `.href` file extension. The contents of these files can be used to specify the URL of one or multiple client libraries (JS/CSS) from remote locations that should be "proxied" to the current AEM instance in order to be managed as AEM client libraries without needing to manage static assets locally.
+
+## Sample Usage
+
+By deploying the `core` bundle provided and by creating a JCR structure similar to the following:
+
+```
+/
+└── apps
+    └── guillaumecleme
+        └── clientlibs
+            └── clientlibs-remote
+                ├── css.txt
+                ├── css
+                │   └── bootstrap.min.css.href
+                ├── js.txt
+                └── js
+                    ├── jquery.min.js.href
+                    ├── popper.min.js.href
+                    └── bootstrap.min.js.href
+```
+
+You will be able to create `.href` files with content similar to the following:
+
+**Single Resource** (e.g. `bootstrap.min.css.href`):
+```
+#Pull Bootstrap from CDN
+https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css
+```
+**Multiple Resources** (e.g. `vue.js.href`):
+```
+#Pull Vue.js
+https://cdn.jsdelivr.net/npm/vue/dist/vue.js
+
+#Also Pull Vue Router
+https://unpkg.com/vue-router@3.1.6/dist/vue-router.js
+```
+
+By importing these files into the `js.txt` and `css.txt` files of your AEM clientlibs, you will be able to dynamically import these libraries and to make reference to these clientlibs within your components without using static `<link rel="stylesheet" href="" />` or `<script src="" />` tags.
+
+**Clientlib Resource File** (e.g. `css.txt`):
+```
+#base=css
+bootstrap.min.css.href
+```
+
+Once complete, you will be able to access your clientlib via it's standard URL: `http://<server>:<port>/apps/guillaumecleme/clientlibs/clientlib-remote.<js|css>`
+
+Or through the standard AEM clientlib proxy: `http://<server>:<port>/etc.clientlibs/guillaumecleme/clientlibs/clientlib-base.<js|css>`
+
+### A note on caching
+Note that once the dependencies have been fetched for the first time, they will remain in the AEM clientlib cache and will not need to be resolved externally until the cache expires (system restarts, etc.) or until any of the source files are modified, therefore invalidating the cache.
+
+## Adding as a Dependency
+This project used [GitHub Packages](https://github.com/features/packages) to publish it's artifacts publicly via GitHub. To add this bundle as a dependency to your own Maven project, see the [Authenticating to GitHub Packages](https://help.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-apache-maven-for-use-with-github-packages#authenticating-to-github-packages) documentation from GitHub and add the bundle dependency to your project:
+
+```
+<dependency>
+    <groupId>me.guillaumecle.aem</groupId>
+    <artifactId>aem-remote-clientlib-proxy.core</artifactId>
+    <version>1.0.0</version>
+  </dependency>
+```
 
 ## Modules
 
 The main parts of the template are:
 
-* core: Java bundle containing all core functionality like OSGi services, listeners or schedulers, as well as component-related Java code such as servlets or request filters.
-* ui.apps: contains the /apps (and /etc) parts of the project, ie JS&CSS clientlibs, components, templates, runmode specific configs as well as Hobbes-tests
-* ui.content: contains sample content using the components from the ui.apps
-* ui.tests: Java bundle containing JUnit tests that are executed server-side. This bundle is not to be deployed onto production.
-* ui.launcher: contains glue code that deploys the ui.tests bundle (and dependent bundles) to the server and triggers the remote JUnit execution
-* ui.frontend: an optional dedicated front-end build mechanism (Angular, React or general Webpack project)
+* core: Java bundle containing all core OSGI functionality.
+* ui.apps: contains sample clientlibs (JS/CSS) under the `/apps` part of the project
 
-## How to build
+## Building From Source
 
 To build all the modules run in the project root directory the following command with Maven 3:
 
     mvn clean install
 
-If you have a running AEM instance you can build and package the whole project and deploy into AEM with
+If you have a running AEM instance you can build and package the core module and deploy into AEM with:
 
-    mvn clean install -PautoInstallPackage
+    mvn clean install -PautoInstallBundle    
 
-Or to deploy it to a publish instance, run
+Or you can build and package the whole project and deploy into AEM with:
 
-    mvn clean install -PautoInstallPackagePublish
+    mvn clean install -PautoInstallPackage -Padobe-public
 
-Or alternatively
-
-    mvn clean install -PautoInstallPackage -Daem.port=4503
-
-Or to deploy only the bundle to the author, run
-
-    mvn clean install -PautoInstallBundle
 
 ## Testing
 
-There are three levels of testing contained in the project:
-
-* unit test in core: this show-cases classic unit testing of the code contained in the bundle. To test, execute:
+Unit testing of the code contained in the bundle. To test, execute:
 
     mvn clean test
 
-* server-side integration tests: this allows to run unit-like tests in the AEM-environment, ie on the AEM server. To test, execute:
+## Maven Settings
 
-    mvn clean verify -PintegrationTests
-
-* client-side Hobbes.js tests: JavaScript-based browser-side tests that verify browser-side behavior. To test:
-
-    in the browser, open the page in 'Developer mode', open the left panel and switch to the 'Tests' tab and find the generated 'MyName Tests' and run them.
-
-## ClientLibs
-
-The frontend module is made available using an [AEM ClientLib](https://helpx.adobe.com/experience-manager/6-5/sites/developing/using/clientlibs.html). When executing the NPM build script, the app is built and the [`aem-clientlib-generator`](https://github.com/wcm-io-frontend/aem-clientlib-generator) package takes the resulting build output and transforms it into such a ClientLib.
-
-A ClientLib will consist of the following files and directories:
-
-- `css/`: CSS files which can be requested in the HTML
-- `css.txt` (tells AEM the order and names of files in `css/` so they can be merged)
-- `js/`: JavaScript files which can be requested in the HTML
-- `js.txt` (tells AEM the order and names of files in `js/` so they can be merged
-- `resources/`: Source maps, non-entrypoint code chunks (resulting from code splitting), static assets (e.g. icons), etc.
-
-## Maven settings
-
-The project comes with the auto-public repository configured. To setup the repository in your Maven settings, refer to:
+The project comes with the `adobe-public` repository configured. To setup the repository in your Maven settings, refer to:
 
     http://helpx.adobe.com/experience-manager/kb/SetUpTheAdobeMavenRepository.html
+
+## Contributors
+
+* [Guillaume Clement](https://guillaumecle.me)
+
+## License
+Apache License 2.0
+
 
