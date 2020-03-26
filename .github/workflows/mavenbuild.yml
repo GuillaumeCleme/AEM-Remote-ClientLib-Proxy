@@ -1,6 +1,11 @@
-name: Maven CI
+name: Maven Build
 
-on: [push]
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    branches:        
+      - master
+      - develop
 
 jobs:
   build:

@@ -1,6 +1,6 @@
 # AEM-Remote-ClientLib-Proxy
 
-![Build Status](https://github.com/GuillaumeCleme/AEM-Remote-ClientLib-Proxy/workflows/Maven%20CI/badge.svg)
+![Build Status](https://github.com/GuillaumeCleme/AEM-Remote-ClientLib-Proxy/workflows/Maven%20Build/badge.svg)
 
 An Adobe Experience Manager (AEM) remote [client library](https://docs.adobe.com/content/help/en/experience-manager-65/developing/introduction/clientlibs.html) proxy service to manage remote non-AEM client libraries server-side.
 
