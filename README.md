@@ -73,7 +73,7 @@ This project used [GitHub Packages](https://github.com/features/packages) to pub
 The main parts of the template are:
 
 * core: Java bundle containing all core OSGI functionality.
-* ui.apps: contains sample clientlibs (JS/CSS) under the `/apps` part of the project
+* ui-apps: contains sample clientlibs (JS/CSS) under the `/apps` part of the project
 
 ## Building From Source
 

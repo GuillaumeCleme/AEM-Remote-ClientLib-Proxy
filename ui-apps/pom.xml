@@ -23,7 +23,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <group>${componentGroupName}</group>
-                    <name>aem-remote-clientlib-proxy.ui.apps</name>
+                    <name>aem-remote-clientlib-proxy-ui-apps</name>
                     <packageType>application</packageType>
                     <accessControlHandling>merge</accessControlHandling>
                     <properties>
