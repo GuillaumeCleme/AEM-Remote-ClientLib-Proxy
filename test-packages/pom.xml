@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>me.guillaumecle.aem</groupId>
+    <artifactId>aem-remote-clientlib-proxy-test-packages</artifactId>
+    <packaging>jar</packaging>
+    <version>1.0.3</version>
+    <description>AEM Remote ClientLib Proxy - Test Packages</description>
+
+    <profiles>
+        <profile>
+            <id>github</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <repositories>
+                <repository>
+                    <id>central</id>
+                    <url>https://repo1.maven.org/maven2</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>github</id>
+                    <name>GitHub OWNER Apache Maven Packages</name>
+                    <url>https://maven.pkg.github.com/GuillaumeCleme/AEM-Remote-ClientLib-Proxy</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>me.guillaumecle.aem</groupId>
+            <artifactId>aem-remote-clientlib-proxy-core</artifactId>
+            <version>1.0.3/version>
+        </dependency>
+    </dependencies>
+
+</project>
