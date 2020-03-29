@@ -64,7 +64,7 @@ This project used [GitHub Packages](https://github.com/features/packages) to pub
 <dependency>
   <groupId>me.guillaumecle.aem</groupId>
   <artifactId>aem-remote-clientlib-proxy-core</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
 </dependency>
 ```
 
@@ -73,7 +73,7 @@ This project used [GitHub Packages](https://github.com/features/packages) to pub
 The main parts of the template are:
 
 * core: Java bundle containing all core OSGI functionality.
-* ui.apps: contains sample clientlibs (JS/CSS) under the `/apps` part of the project
+* ui-apps: contains sample clientlibs (JS/CSS) under the `/apps` part of the project
 
 ## Building From Source
 
@@ -108,5 +108,7 @@ The project comes with the `adobe-public` repository configured. To setup the re
 
 ## License
 Apache License 2.0
+
+Icons made by [Freepik](https://www.flaticon.com/authors/freepik) from [www.flaticon.com](https://www.flaticon.com/)
 
 

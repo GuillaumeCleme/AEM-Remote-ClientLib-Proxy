@@ -5,11 +5,11 @@
     <parent>
         <groupId>me.guillaumecle.aem</groupId>
         <artifactId>aem-remote-clientlib-proxy</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.3</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>aem-remote-clientlib-proxy.ui-apps</artifactId>
+    <artifactId>aem-remote-clientlib-proxy-ui-apps</artifactId>
     <packaging>content-package</packaging>
     <name>AEM Remote ClientLib Proxy - UI apps</name>
     <description>UI apps package for AEM Remote ClientLib Proxy</description>
@@ -23,7 +23,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <group>${componentGroupName}</group>
-                    <name>aem-remote-clientlib-proxy.ui.apps</name>
+                    <name>aem-remote-clientlib-proxy-ui-apps</name>
                     <packageType>application</packageType>
                     <accessControlHandling>merge</accessControlHandling>
                     <properties>
