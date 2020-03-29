@@ -5,10 +5,10 @@
     <parent>
         <groupId>me.guillaumecle.aem</groupId>
         <artifactId>aem-remote-clientlib-proxy</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>aem-remote-clientlib-proxy.core</artifactId>
+    <artifactId>aem-remote-clientlib-proxy-core</artifactId>
     <name>AEM Remote ClientLib Proxy - Core</name>
     <description>Core bundle for AEM Remote ClientLib Proxy</description>
     <build>
