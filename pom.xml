@@ -6,7 +6,7 @@
     <groupId>me.guillaumecle.aem</groupId>
     <artifactId>aem-remote-clientlib-proxy</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <name>AEM Remote ClientLib Proxy</name>
     <description>AEM Remote ClientLib Proxy</description>
 
