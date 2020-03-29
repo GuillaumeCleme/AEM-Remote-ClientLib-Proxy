@@ -109,4 +109,6 @@ The project comes with the `adobe-public` repository configured. To setup the re
 ## License
 Apache License 2.0
 
+Icons made by [Freepik](https://www.flaticon.com/authors/freepik) from [www.flaticon.com](https://www.flaticon.com/)
+
 
