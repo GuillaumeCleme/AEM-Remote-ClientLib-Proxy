@@ -30,6 +30,10 @@
         <componentGroupName>me.guillaumecle.aem</componentGroupName>
     </properties>
 
+    <scm>
+        <connection>scm:git:https://github.com/guillaumecleme/aem-remote-clientlib-proxy</connection>
+    </scm>
+
     <!-- https://help.github.com/en/packages/using-github-packages-with-your-projects-ecosystem/configuring-apache-maven-for-use-with-github-packages -->
     <distributionManagement>
         <repository>
