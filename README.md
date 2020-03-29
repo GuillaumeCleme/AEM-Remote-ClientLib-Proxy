@@ -62,10 +62,10 @@ This project used [GitHub Packages](https://github.com/features/packages) to pub
 
 ```
 <dependency>
-    <groupId>me.guillaumecle.aem</groupId>
-    <artifactId>aem-remote-clientlib-proxy.core</artifactId>
-    <version>1.0.0</version>
-  </dependency>
+  <groupId>me.guillaumecle.aem</groupId>
+  <artifactId>aem-remote-clientlib-proxy-core</artifactId>
+  <version>1.0.2</version>
+</dependency>
 ```
 
 ## Modules
